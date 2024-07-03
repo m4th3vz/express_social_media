@@ -1,0 +1,42 @@
+/* Cabeçalho do site */
+.navbar-custom {
+    background-color: #F2E01C; /* Cor personalizada */
+}
+
+.navbar-custom .navbar-brand {
+    color: black;
+    text-align: center; /* Alinha o texto centralmente */
+    width: 100%; /* Ocupa toda a largura disponível */
+}
+
+/* Botões */
+.center-screen {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-custom {
+    width: 100px;
+    height: 40px;
+    background-color: #F2E01C; /* Cor personalizada */
+    color: black; /* Cor do texto */
+    border: none; /* Remove a borda padrão */
+}
+
+.btn-custom:hover {
+    background-color: #FAED58; /* Cor ao passar o mouse */
+    color: black; /* Cor do texto */
+}
+
+.btn-custom-2 {
+    background-color: #F2E01C; /* Cor personalizada */
+    color: black; /* Cor do texto */
+    border: none; /* Remove a borda padrão */
+}
+
+.btn-custom-2:hover {
+    background-color: #FAED58; /* Cor ao passar o mouse */
+    color: black; /* Cor do texto */
+}
