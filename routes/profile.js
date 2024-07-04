@@ -111,4 +111,18 @@ router.put('/comments/:id', async (req, res) => {
     }
 });
 
+// Rota para exibir o perfil de outros usuários
+router.get('/:username', async (req, res) => {
+    const { username } = req.params;
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+        return res.status(404).send('Usuário não encontrado.');
+    }
+    const comments = await Comment.findAll({
+        where: { username },
+        order: [['createdAt', 'DESC']]
+    });
+    res.render('other_profile', { user, comments });
+});
+
 module.exports = router;
