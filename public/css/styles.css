@@ -18,8 +18,8 @@
 }
 
 .btn-custom {
-    width: 100px;
-    height: 40px;
+    width: 100px; /* Tamanho específico para os botões */
+    height: 40px; /* Tamanho específico para os botões */
     background-color: #F2E01C; /* Cor personalizada */
     color: black; /* Cor do texto */
     border: none; /* Remove a borda padrão */
@@ -39,4 +39,31 @@
 .btn-custom-2:hover {
     background-color: #FAED58; /* Cor ao passar o mouse */
     color: black; /* Cor do texto */
+}
+
+/* Rodapé */
+.footer {
+    background-color: #fff9b7; /* Cor do rodapé */
+    bottom: 0; /* Alinha o rodapé na parte inferior */
+    width: 100%; /* Define a largura do rodapé como 100% da largura da janela */
+    flex-shrink: 0; /* Impede que o rodapé encolha */
+}
+
+.navbar-brand {
+    color: black;
+    text-align: center; /* Alinha o texto centralmente */
+    width: 100%; /* Ocupa toda a largura disponível */
+}
+
+/* Mantém o rodapé no final da página */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
 }
