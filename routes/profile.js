@@ -2,7 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const { User, Comment, Follow  } = require('../models');
+const { User, Comment, Follow } = require('../models');
+const moment = require('moment');
 
 // Rota para exibir o perfil do usuário
 router.get('/', async (req, res) => {
@@ -22,7 +23,7 @@ router.get('/', async (req, res) => {
 router.get('/edit', async (req, res) => {
     if (req.session.loggedin) {
         const user = await User.findOne({ where: { username: req.session.username } });
-        res.render('profile_edit', { user });
+        res.render('profile_edit', { user, moment }); // Passando moment para o template
     } else {
         res.redirect('/auth/login');
     }
@@ -33,7 +34,13 @@ router.post('/edit', async (req, res) => {
     if (req.session.loggedin) {
         const { name, birthday, location, bio, email, phone, education } = req.body;
         await User.update({
-            name, birthday, location, bio, email, phone, education
+            name, 
+            birthday: moment(birthday).toDate(), // Ajustando o fuso horário no back-end
+            location, 
+            bio, 
+            email, 
+            phone, 
+            education
         }, {
             where: { username: req.session.username }
         });
@@ -158,27 +165,27 @@ router.post('/follow/:username', async (req, res) => {
   // Rota para exibir o perfil de outro usuário
   router.get('/:username', async (req, res) => {
     const { username } = req.params;
-  
+
     try {
-      const profileUser = await User.findOne({ where: { username } });
-      if (!profileUser) {
-        return res.status(404).send('Usuário não encontrado.');
-      }
-  
-      let isFollowing = false;
-      if (req.session.loggedin) {
-        const currentUser = await User.findOne({ where: { username: req.session.username } });
-  
-        // Verifica se o usuário logado já está seguindo o perfil sendo visualizado
-        const following = await currentUser.getFollowing();
-        isFollowing = following.some(user => user.username === profileUser.username);
-      }
-  
-      res.render('other_profile', { title: 'Perfil de Usuário', username: req.session.username, profileUser, isFollowing, loggedin: req.session.loggedin });
+        const profileUser = await User.findOne({ where: { username } });
+        if (!profileUser) {
+            return res.status(404).send('Usuário não encontrado.');
+        }
+
+        let isFollowing = false;
+        if (req.session.loggedin) {
+            const currentUser = await User.findOne({ where: { username: req.session.username } });
+
+            // Verifica se o usuário logado já está seguindo o perfil sendo visualizado
+            const following = await currentUser.getFollowing();
+            isFollowing = following.some(user => user.username === profileUser.username);
+        }
+
+        res.render('other_profile', { title: 'Perfil de Usuário', username: req.session.username, profileUser, isFollowing, loggedin: req.session.loggedin, moment });
     } catch (error) {
-      console.error('Erro ao carregar perfil de usuário:', error);
-      res.status(500).send('Erro ao carregar perfil de usuário.');
+        console.error('Erro ao carregar perfil de usuário:', error);
+        res.status(500).send('Erro ao carregar perfil de usuário.');
     }
-  });
+});
 
 module.exports = router;

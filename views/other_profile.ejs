@@ -3,24 +3,28 @@
 
 <body>
     <main>
-        <nav class="navbar navbar-expand-lg navbar-custom">
-            <div class="container-fluid">
-                <div class="navbar-brand">
-                    <a href="/" style="text-decoration: none; color: black;">Projeto Express</a>
-                </div>
-            </div>
-        </nav>
-
         <div class="container mt-5">
             <h1>Perfil de <%= profileUser.username %></h1>
             <% if (profileUser.name) { %>
                 <p>Nome: <%= profileUser.name %></p>
+            <% } %>
+            <% if (profileUser.birthday) { %>
+                <p>Data de Aniversário: <%= moment(profileUser.birthday).format('DD/MM/YYYY') %></p>
             <% } %>
             <% if (profileUser.location) { %>
                 <p>Localização: <%= profileUser.location %></p>
             <% } %>
             <% if (profileUser.bio) { %>
                 <p>Bio: <%= profileUser.bio %></p>
+            <% } %>
+            <% if (profileUser.email) { %>
+                <p>Email: <%= profileUser.email %></p>
+            <% } %>
+            <% if (profileUser.phone) { %>
+                <p>Telefone: <%= profileUser.phone %></p>
+            <% } %>
+            <% if (profileUser.education) { %>
+                <p>Formação Acadêmica: <%= profileUser.education %></p>
             <% } %>
 
             <% if (loggedin && profileUser.username !== username) { %>
