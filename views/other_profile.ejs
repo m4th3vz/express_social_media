@@ -9,78 +9,34 @@
                     <a href="/" style="text-decoration: none; color: black;">Projeto Express</a>
                 </div>
             </div>
-            <div class="justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <div class="d-flex justify-content-center me-2">
-                        <a href="/profile" class="btn btn-light">Perfil</a>
-                    </div>
-                    <div class="d-flex justify-content-center me-2">
-                        <a href="/auth/register" class="btn btn-light">Registrar</a>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <form action="/auth/logout" method="post">
-                            <button type="submit" class="btn btn-light">Logout</button>
-                        </form>
-                    </div>
-                </ul>
-            </div>
         </nav>
 
-    <div class="container mt-5">
-        <h2>Perfil de <%= user.username %></h2>
-        <div class="mb-3">
-            <strong>Nome:</strong> <%= user.name %>
-        </div>
-        <div class="mb-3">
-            <strong>Data de Aniversário:</strong> <%= user.birthday ? user.birthday.toLocaleDateString('pt-BR') : '' %>
-        </div>
-        <div class="mb-3">
-            <strong>Localização:</strong> <%= user.location %>
-        </div>
-        <div class="mb-3">
-            <strong>Bio:</strong> <%= user.bio %>
-        </div>
-        <div class="mb-3">
-            <strong>Email:</strong> <%= user.email %>
-        </div>
-        <div class="mb-3">
-            <strong>Telefone:</strong> <%= user.phone %>
-        </div>
-        <div class="mb-3">
-            <strong>Formação Acadêmica:</strong> <%= user.education %>
-        </div>
+        <div class="container mt-5">
+            <h1>Perfil de <%= profileUser.username %></h1>
+            <% if (profileUser.name) { %>
+                <p>Nome: <%= profileUser.name %></p>
+            <% } %>
+            <% if (profileUser.location) { %>
+                <p>Localização: <%= profileUser.location %></p>
+            <% } %>
+            <% if (profileUser.bio) { %>
+                <p>Bio: <%= profileUser.bio %></p>
+            <% } %>
 
-        <h2>Comentários</h2>
-        <div class="mt-5">
-            <% comments.forEach(comment => { %>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= comment.username %></h5>
-                        <p class="card-text"><%= comment.content %></p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <%= new Date(comment.createdAt).toLocaleDateString('pt-BR', {
-                                    day: '2-digit',
-                                    month: 'long',
-                                    year: 'numeric'
-                                }) %> às 
-                                <%= new Date(comment.createdAt).toLocaleTimeString('pt-BR', {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                }) %>
-                                <% if (comment.edited) { %>
-                                    (editado)
-                                <% } %>
-                            </small>
-                        </p>
-                    </div>
-                </div>
-            <% }) %>
+            <% if (loggedin && profileUser.username !== username) { %>
+                <% if (isFollowing) { %>
+                    <form action="/profile/unfollow/<%= profileUser.username %>" method="POST">
+                        <button type="submit" class="btn btn-danger">Deixar de Seguir</button>
+                    </form>
+                <% } else { %>
+                    <form action="/profile/follow/<%= profileUser.username %>" method="POST">
+                        <button type="submit" class="btn btn-primary">Seguir</button>
+                    </form>
+                <% } %>
+            <% } %>
         </div>
-    </div>
-</main>
+    </main>
 
     <%- include('partials/footer') %>
-
 </body>
 </html>

@@ -46,6 +46,10 @@ const Comment = sequelize.define('Comment', {
   }
 });
 
+// Definir a relação de seguidores entre usuários
+User.belongsToMany(User, { as: 'followers', through: 'UserFollows', foreignKey: 'followedId' });
+User.belongsToMany(User, { as: 'following', through: 'UserFollows', foreignKey: 'followerId' });
+
 sequelize.sync();
 
 module.exports = { sequelize, User, Comment };

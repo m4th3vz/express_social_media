@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { User, Comment } = require('../models');
+const { User, Comment, Follow  } = require('../models');
 
 // Rota para exibir o perfil do usuário
 router.get('/', async (req, res) => {
@@ -111,18 +111,74 @@ router.put('/comments/:id', async (req, res) => {
     }
 });
 
-// Rota para exibir o perfil de outros usuários
-router.get('/:username', async (req, res) => {
+// Rota para seguir um usuário
+router.post('/follow/:username', async (req, res) => {
     const { username } = req.params;
-    const user = await User.findOne({ where: { username } });
-    if (!user) {
-        return res.status(404).send('Usuário não encontrado.');
+  
+    try {
+      const currentUser = await User.findOne({ where: { username: req.session.username } });
+      const profileUser = await User.findOne({ where: { username } });
+  
+      // Verifica se o usuário já está seguindo o perfil sendo visualizado
+      const isFollowing = await currentUser.hasFollowing(profileUser);
+  
+      if (!isFollowing) {
+        await currentUser.addFollowing(profileUser);
+      }
+  
+      res.redirect(`/profile/${username}`);
+    } catch (error) {
+      console.error('Erro ao seguir usuário:', error);
+      res.status(500).send('Erro ao seguir usuário.');
     }
-    const comments = await Comment.findAll({
-        where: { username },
-        order: [['createdAt', 'DESC']]
-    });
-    res.render('other_profile', { user, comments });
-});
+  });
+  
+  // Rota para deixar de seguir um usuário
+  router.post('/unfollow/:username', async (req, res) => {
+    const { username } = req.params;
+  
+    try {
+      const currentUser = await User.findOne({ where: { username: req.session.username } });
+      const profileUser = await User.findOne({ where: { username } });
+  
+      // Verifica se o usuário está seguindo o perfil sendo visualizado
+      const isFollowing = await currentUser.hasFollowing(profileUser);
+  
+      if (isFollowing) {
+        await currentUser.removeFollowing(profileUser);
+      }
+  
+      res.redirect(`/profile/${username}`);
+    } catch (error) {
+      console.error('Erro ao deixar de seguir usuário:', error);
+      res.status(500).send('Erro ao deixar de seguir usuário.');
+    }
+  });
+  
+  // Rota para exibir o perfil de outro usuário
+  router.get('/:username', async (req, res) => {
+    const { username } = req.params;
+  
+    try {
+      const profileUser = await User.findOne({ where: { username } });
+      if (!profileUser) {
+        return res.status(404).send('Usuário não encontrado.');
+      }
+  
+      let isFollowing = false;
+      if (req.session.loggedin) {
+        const currentUser = await User.findOne({ where: { username: req.session.username } });
+  
+        // Verifica se o usuário logado já está seguindo o perfil sendo visualizado
+        const following = await currentUser.getFollowing();
+        isFollowing = following.some(user => user.username === profileUser.username);
+      }
+  
+      res.render('other_profile', { title: 'Perfil de Usuário', username: req.session.username, profileUser, isFollowing, loggedin: req.session.loggedin });
+    } catch (error) {
+      console.error('Erro ao carregar perfil de usuário:', error);
+      res.status(500).send('Erro ao carregar perfil de usuário.');
+    }
+  });
 
 module.exports = router;
