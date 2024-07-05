@@ -11,15 +11,20 @@
             </div>
 
             <!-- Exibe os comentários -->
-            <div class="comments-list">
-                <% comments.forEach(comment => { %>
-                    <div class="comment">
-                        <p><%= comment.username %>:</p>
-                        <p><%= comment.content %></p>
-                        <p><small>Postado em <%= comment.createdAt.toDateString() %></small></p>
-                    </div>
-                <% }); %>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <% comments.forEach(comment => { %>
+                        <h5 class="card-title">
+                            <a href="/profile/<%= comment.username %>" style="text-decoration: none;"><%= comment.username %></a>
+                        </h5>
+                        <div class="comment">
+                            <p><%= comment.content %></p>
+                            <p><small>Postado em <%= new Intl.DateTimeFormat('pt-BR', { dateStyle: 'full' }).format(comment.createdAt) %></small></p>
+                        </div>
+                    <% }); %>
+                </div>
             </div>
+            
         <% } else { %>
             <!-- Se não está logado -->
             <div class="text-center">
