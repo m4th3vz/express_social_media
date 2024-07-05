@@ -29,10 +29,12 @@ app.use(methodOverride('_method'));
 const indexRoutes = require('./routes/index');
 const profileRoutes = require('./routes/profile');
 const authRoutes = require('./routes/auth');
+const other_profileRoutes = require('./routes/other_profile');
 
 app.use('/', indexRoutes);
 app.use('/profile', profileRoutes);
 app.use('/auth', authRoutes);
+app.use('/other_profile', other_profileRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
